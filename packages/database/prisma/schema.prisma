@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  userId    String   @id @default(cuid())
+  name      String
+  email     String?  @unique
+  birthDate DateTime
+  gender    String
+  phone     String?  @unique
+  height    Int
+  weight    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Meal {
+  mealId    String     @id @default(cuid())
+  date      DateTime
+  type      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  mealItems MealItem[]
+}
+
+model MealItem {
+  mealItemId       String             @id @default(cuid())
+  mealId           String
+  meal             Meal               @relation(fields: [mealId], references: [mealId])
+  imageUrl         String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  mealItemAnalyses MealItemAnalysis[]
+
+  @@index([mealId])
+}
+
+model MealItemAnalysis {
+  mealItemAnalysisId String   @id @default(cuid())
+  mealItemId         String
+  mealItem           MealItem @relation(fields: [mealItemId], references: [mealItemId])
+
+  kcal         Float
+  carbohydrate Float
+  sugars       Float
+  fat          Float
+  protein      Float
+  calcium      Float
+  phosphorus   Float
+  natrium      Float
+  kalium       Float
+  magnesium    Float
+  iron         Float
+  zinc         Float
+  cholesterol  Float
+  transfat     Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([mealItemId])
+}
