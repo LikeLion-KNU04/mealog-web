@@ -71,6 +71,7 @@ jobs:
           echo KAKAO_AUTH_CLIENT_SECRET=${{ secrets.KAKAO_AUTH_CLIENT_SECRET }} >> ./apps/web/.env.production
           echo NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} >> ./apps/web/.env.production
           echo NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }} >> ./apps/web/.env.production
+          echo AI_API_URL=${{ secrets.AI_API_URL }} >> ./apps/web/.env.production
           echo FIREBASE_API_KEY=${{ secrets.FIREBASE_API_KEY }} >> ./apps/web/.env.production
           echo FIREBASE_AUTH_DOMAIN=${{ secrets.FIREBASE_AUTH_DOMAIN }} >> ./apps/web/.env.production
           echo FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }} >> ./apps/web/.env.production
