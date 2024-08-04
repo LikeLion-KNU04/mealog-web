@@ -23,6 +23,7 @@ import {
   Legend,
 } from 'chart.js'
 import { useSession } from 'next-auth/react'
+import { User } from '@prisma/client'
 
 Chart.register(
   CategoryScale,
@@ -34,9 +35,12 @@ Chart.register(
   Legend
 )
 
-export default function DashboardPage() {
+interface DashboardPageProps {
+  user: User
+}
+
+export default function DashboardPage({ user }: DashboardPageProps) {
   const { data: session } = useSession() //세션 정보를 가져옴
-  console.log(session?.user?.image)
 
   return (
     <MainLayout>
@@ -66,12 +70,12 @@ export default function DashboardPage() {
         <div className="w-1/5">
           <Image
             className="rounded-full"
-            src={`https://picsum.photos/200/200?random=5`}
+            src={session?.user?.image ?? ''}
             alt="random"
             width={120}
             height={120}
           />
-          <div className="text-2xl font-bold py-6">황부연</div>
+          <div className="text-2xl font-bold py-6">{user.name}</div>
           <div className="flex flex-col gap-1">
             <div className="flex justify-between gap-4">
               <div className="text-gray-600">분석한 개수</div>
