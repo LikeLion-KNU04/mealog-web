@@ -1,7 +1,8 @@
-import { IconChartBubble, IconLayoutGrid, IconMapPin, IconWeight } from "@tabler/icons-react";
+import { IconChartBubble, IconCurrencyWon, IconLayoutGrid, IconMapPin, IconWeight } from "@tabler/icons-react";
 
 interface MarketDetailProps extends React.HTMLAttributes<HTMLDivElement> {
   amount: number;
+  price: number;
   weight: number;
   calorie: number;
   carbs: number;
@@ -12,6 +13,7 @@ interface MarketDetailProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export default function MarketDetail({
   amount,
+  price,
   weight,
   calorie,
   carbs,
@@ -24,6 +26,17 @@ export default function MarketDetail({
     <div {...props} className="flex flex-col w-full gap-2">
       <div className="text-2xl font-bold">
         상품 정보
+      </div>
+      <div className="flex justify-between">
+        <div className="flex items-center gap-2">
+          <IconCurrencyWon size={24} />
+          <div className="text-lg font-bold">
+            가격(원)
+          </div>
+        </div>
+        <div className="text-lg">
+          {price.toLocaleString('ko-KR')}
+        </div>
       </div>
       <div className="flex justify-between">
         <div className="flex items-center gap-2">
