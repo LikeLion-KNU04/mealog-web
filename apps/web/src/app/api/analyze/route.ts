@@ -72,9 +72,12 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const rawData = JSON.parse(r.data.replace(/NaN/g, '0.0'))
+  const analysisData =
+    typeof r.data === 'string'
+      ? JSON.parse(r.data.replace(/NaN/g, '0.0'))
+      : r.data
 
-  const analysisResult = rawData.result.result[0]
+  const analysisResult = analysisData.result.result[0]
 
   if (!analysisResult) {
     return NextResponse.json({ message: 'No analysis result' }, { status: 400 })
