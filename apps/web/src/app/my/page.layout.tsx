@@ -6,8 +6,21 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/react'
 import clsx from 'clsx'
 import Image from 'next/image'
 import { Fragment } from 'react'
+import { User, Meal, MealItem } from '@repo/database'
+import { getDownloadURL, ref } from 'firebase/storage'
+import { storage } from '@/lib/firebase/firebaseClient'
 
-export default function MyPageLayout() {
+interface MyPageLayoutProps {
+  user: User
+  meals: (Meal & { mealItems: MealItem[] })[]
+  imageUrls: Record<string, string>
+}
+
+export default function MyPageLayout({
+  user,
+  meals,
+  imageUrls,
+}: MyPageLayoutProps) {
   return (
     <MainLayout>
       <div className="container mx-auto px-36 py-12">
@@ -21,7 +34,7 @@ export default function MyPageLayout() {
               className="rounded-full"
             />
             <div>
-              <div className="text-3xl font-semibold pb-4">사용자 이름</div>
+              <div className="text-3xl font-semibold pb-4">{user.name}</div>
               <div className="flex gap-4 pb-4">
                 <div className="grow text-lg font-light text-black/60">
                   게시글 <span className="font-medium">100</span>
@@ -54,7 +67,7 @@ export default function MyPageLayout() {
                     selected && 'border-b-2 border-primary-600'
                   )}
                 >
-                  게시글
+                  식사 기록
                 </button>
               )}
             </Tab>
@@ -66,7 +79,7 @@ export default function MyPageLayout() {
                     selected && 'border-b-2 border-primary-600'
                   )}
                 >
-                  댓글
+                  게시글
                 </button>
               )}
             </Tab>
@@ -85,17 +98,14 @@ export default function MyPageLayout() {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <div className="grid grid-cols-4 gap-4">
-                {Array.from({ length: 9 }).map((_, index) => (
-                  <Image
-                    key={index}
-                    className="w-full rounded-2xl"
-                    src={`https://picsum.photos/200/200?random=${index}`}
-                    alt="post"
-                    width={160}
-                    height={160}
-                  />
-                ))}
+              <div className="">
+                {meals.map((meal) => {
+                  return (
+                    <div key={meal.mealId} className="flex gap-4 py-4">
+                      {meal.date.toLocaleDateString()}
+                    </div>
+                  )
+                })}
               </div>
             </TabPanel>
             <TabPanel>Content 2</TabPanel>
