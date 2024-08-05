@@ -17,7 +17,7 @@ export default function Comment({
       <Image
         className="rounded-full"
         src="https://picsum.photos/200/200"
-        alt="thumbnail"
+        alt="user Profile"
         width={48}
         height={48}
       />
