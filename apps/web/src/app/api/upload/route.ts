@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
   const fileNames: string[] = []
 
-  images.forEach(async (image) => {
+  for (let image of images) {
     const fileExtension = image.name.split('.').pop()
     const fileName = `${v4()}.${fileExtension}`
     const fileRef = ref(storage, `images/${fileName}`)
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     console.log(fileName)
 
     await uploadBytes(fileRef, image)
-  })
+  }
 
   const meal = await prisma.meal.create({
     data: {
