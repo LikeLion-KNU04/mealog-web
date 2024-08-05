@@ -4,7 +4,9 @@ import MainLayout from '@/components/MainLayout'
 import { Meal, MealItem } from '@repo/database'
 import { IconFileAnalytics, IconUpload } from '@tabler/icons-react'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 
 interface AnalyzePageLayoutProps {
   mealId: string
@@ -17,6 +19,7 @@ export default function AnalyzePageLayout({
   meal,
   mealItems,
 }: AnalyzePageLayoutProps) {
+  const router = useRouter()
   const [successCount, setSuccessCount] = useState(0)
 
   const totalCount = mealItems.length
@@ -31,6 +34,9 @@ export default function AnalyzePageLayout({
           console.error(error)
         }
       }
+
+      toast.success('분석이 완료되었습니다!')
+      setTimeout(() => router.push(`/meal/${mealId}`), 2000)
     })()
   }, [mealItems])
 

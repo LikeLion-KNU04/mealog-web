@@ -58,7 +58,7 @@ export default function DashboardPage({ user }: DashboardPageProps) {
             </div>
             <div className="flex items-center gap-4">
               <div className="font-bold text-4xl">
-                영양 분석 및 식단 추천 서비스
+                AI 기반 영양 분석 및 식단 추천 서비스
               </div>
               <Image src={logoWhite} alt="logo" width={120} />
             </div>
@@ -110,7 +110,7 @@ export default function DashboardPage({ user }: DashboardPageProps) {
           </div>
 
           <div className="text-2xl font-bold py-3">
-            황부연님의 일평균 영양 현황
+            {user.name}님의 일평균 영양 현황
           </div>
 
           <div className="grid grid-cols-4 gap-4 py-3 mb-6">
@@ -171,7 +171,9 @@ export default function DashboardPage({ user }: DashboardPageProps) {
             </div>
           </div>
 
-          <div className="text-2xl font-bold py-3">황부연님의 영양섭취량</div>
+          <div className="text-2xl font-bold py-3">
+            {user.name}님의 영양섭취량
+          </div>
 
           <div className="pb-12">
             <Line

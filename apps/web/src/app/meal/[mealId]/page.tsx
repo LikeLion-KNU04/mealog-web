@@ -2,6 +2,8 @@ import { getServerSession } from 'next-auth'
 import { notFound, redirect } from 'next/navigation'
 import { PrismaClient } from '@repo/database'
 import MealPageLayout from './page.layout'
+import { storage } from '@/lib/firebase/firebaseClient'
+import { ref, getDownloadURL } from 'firebase/storage'
 
 const prisma = new PrismaClient()
 
@@ -35,7 +37,19 @@ export default async function MealPage({
 
   const mealItems = await prisma.mealItem.findMany({
     where: { mealId },
+    include: {
+      mealItemAnalysis: true,
+    },
   })
 
-  return <MealPageLayout meal={meal} mealItems={mealItems} />
+  const imageUrls = await Promise.all(
+    mealItems.map(async (mealItem) => {
+      const refPath = ref(storage, `images/${mealItem.imageName}`)
+      return getDownloadURL(refPath)
+    })
+  )
+
+  return (
+    <MealPageLayout meal={meal} mealItems={mealItems} imageUrls={imageUrls} />
+  )
 }

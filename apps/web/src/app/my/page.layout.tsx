@@ -102,45 +102,47 @@ export default function MyPageLayout({
           <TabPanels>
             <TabPanel>
               <div className="flex flex-col gap-2">
-                {meals.map((meal) => {
-                  let typeStr = ''
+                {meals
+                  .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+                  .map((meal) => {
+                    let typeStr = ''
 
-                  switch (meal.type) {
-                    case 'breakfast':
-                      typeStr = '아침'
-                      break
-                    case 'lunch':
-                      typeStr = '점심'
-                      break
-                    case 'dinner':
-                      typeStr = '저녁'
-                      break
-                    case 'snack':
-                      typeStr = '간식'
-                      break
-                    case 'etc':
-                      typeStr = '기타'
-                      break
-                  }
+                    switch (meal.type) {
+                      case 'breakfast':
+                        typeStr = '아침'
+                        break
+                      case 'lunch':
+                        typeStr = '점심'
+                        break
+                      case 'dinner':
+                        typeStr = '저녁'
+                        break
+                      case 'snack':
+                        typeStr = '간식'
+                        break
+                      case 'etc':
+                        typeStr = '기타'
+                        break
+                    }
 
-                  return (
-                    <Link
-                      href={`/meal/${meal.mealId}`}
-                      key={meal.mealId}
-                      className="bg-gray-100 rounded-xl p-4 flex justify-between items-center gap-4 py-4"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="text-lg font-medium">
-                          {meal.date.toLocaleDateString()} {typeStr}
+                    return (
+                      <Link
+                        href={`/meal/${meal.mealId}`}
+                        key={meal.mealId}
+                        className="bg-gray-100 rounded-xl p-4 flex justify-between items-center gap-4 py-4"
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className="text-lg font-medium">
+                            {meal.date.toLocaleDateString()} {typeStr}
+                          </div>
+                          <div className="text-sm">
+                            {meal.mealItems.length}개 음식
+                          </div>
                         </div>
-                        <div className="text-sm">
-                          {meal.mealItems.length}개 음식
-                        </div>
-                      </div>
-                      <IconChevronRight />
-                    </Link>
-                  )
-                })}
+                        <IconChevronRight />
+                      </Link>
+                    )
+                  })}
               </div>
             </TabPanel>
             <TabPanel>Content 2</TabPanel>
