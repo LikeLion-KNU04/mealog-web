@@ -3,6 +3,7 @@
 import Button from '@/components/Button'
 import MainLayout from '@/components/MainLayout'
 import { Radio, RadioGroup } from '@headlessui/react'
+import { Meal } from '@repo/database'
 import {
   IconArrowRight,
   IconCircle,
@@ -12,6 +13,7 @@ import {
 } from '@tabler/icons-react'
 import axios from 'axios'
 import clsx from 'clsx'
+import { useRouter } from 'next/navigation'
 import { useRef, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
@@ -23,7 +25,9 @@ interface UploadFormState {
 }
 
 export default function UploadPage() {
+  const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
+
   const { register, watch, control, setValue, handleSubmit } =
     useForm<UploadFormState>({
       defaultValues: {
@@ -103,9 +107,12 @@ export default function UploadPage() {
       })
       .then((res) => {
         if (res.status === 200) {
-          toast.success('분석이 완료되었습니다.')
+          toast.success('사진 업르드를 완료했습니다.')
+
+          let meal = res.data.data as Meal
+          router.push(`/analyze?mealId=${meal.mealId}`)
         } else {
-          toast.error('분석에 실패했습니다.')
+          toast.error('사진 업로드에 실패했습니다.')
         }
       })
   }

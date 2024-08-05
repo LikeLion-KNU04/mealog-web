@@ -22,37 +22,47 @@ model User {
   weight    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  meals     Meal[]
 }
 
 model Meal {
   mealId    String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [userId])
   date      DateTime
   type      String
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   mealItems MealItem[]
+
+  @@index([userId])
 }
 
 model MealItem {
-  mealItemId       String             @id @default(cuid())
+  mealItemId       String            @id @default(cuid())
   mealId           String
-  meal             Meal               @relation(fields: [mealId], references: [mealId])
-  imageUrl         String
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  mealItemAnalyses MealItemAnalysis[]
+  meal             Meal              @relation(fields: [mealId], references: [mealId])
+  imageName        String
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  mealItemAnalysis MealItemAnalysis?
 
   @@index([mealId])
 }
 
 model MealItemAnalysis {
   mealItemAnalysisId String   @id @default(cuid())
-  mealItemId         String
+  mealItemId         String   @unique
   mealItem           MealItem @relation(fields: [mealItemId], references: [mealItemId])
 
+  classId    Int
+  className  String
+  confidence Float
+
+  amount       Float
   kcal         Float
   carbohydrate Float
-  sugars       Float
+  sugar        Float
   fat          Float
   protein      Float
   calcium      Float

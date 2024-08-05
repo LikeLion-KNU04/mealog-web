@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import NextTopLoader from 'nextjs-toploader'
-import AuthContext from '@/context/AuthContext'
+import AuthContext from '@/contexts/AuthContext'
 import { getServerSession } from 'next-auth'
 import { Toaster } from 'react-hot-toast'
 

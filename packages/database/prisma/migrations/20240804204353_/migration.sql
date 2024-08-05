@@ -27,7 +27,7 @@ CREATE TABLE `Meal` (
 CREATE TABLE `MealItem` (
     `mealItemId` VARCHAR(191) NOT NULL,
     `mealId` VARCHAR(191) NOT NULL,
-    `imageUrl` VARCHAR(191) NOT NULL,
+    `imageName` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -41,7 +41,7 @@ CREATE TABLE `MealItemAnalysis` (
     `mealItemId` VARCHAR(191) NOT NULL,
     `kcal` DOUBLE NOT NULL,
     `carbohydrate` DOUBLE NOT NULL,
-    `sugars` DOUBLE NOT NULL,
+    `sugar` DOUBLE NOT NULL,
     `fat` DOUBLE NOT NULL,
     `protein` DOUBLE NOT NULL,
     `calcium` DOUBLE NOT NULL,

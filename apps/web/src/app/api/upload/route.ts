@@ -4,10 +4,26 @@ import { ref, uploadBytes } from 'firebase/storage'
 import { v4 } from 'uuid'
 import { storage } from '@/lib/firebase/firebaseClient'
 import { PrismaClient } from '@repo/database'
+import { getServerSession } from 'next-auth'
+import axios from 'axios'
 
 const prisma = new PrismaClient()
 
 export async function POST(request: NextRequest) {
+  const session = await getServerSession()
+
+  if (!session?.user) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email ?? undefined },
+  })
+
+  if (!user) {
+    return NextResponse.json({ message: 'User not found' }, { status: 404 })
+  }
+
   const formData = await request.formData()
 
   const { data, error } = uploadSchema.safeParse(formData)
@@ -40,6 +56,7 @@ export async function POST(request: NextRequest) {
 
   const meal = await prisma.meal.create({
     data: {
+      userId: user.userId,
       date: new Date(date),
       type,
     },
@@ -48,7 +65,7 @@ export async function POST(request: NextRequest) {
   const items = await prisma.mealItem.createMany({
     data: fileNames.map((fileName) => ({
       mealId: meal.mealId,
-      imageUrl: `images/${fileName}`,
+      imageName: fileName,
     })),
   })
 
