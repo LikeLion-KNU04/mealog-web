@@ -9,17 +9,20 @@ import { Fragment } from 'react'
 import { User, Meal, MealItem } from '@repo/database'
 import { getDownloadURL, ref } from 'firebase/storage'
 import { storage } from '@/lib/firebase/firebaseClient'
+import Link from 'next/link'
+import { Session } from 'next-auth'
+import { IconChevronRight } from '@tabler/icons-react'
 
 interface MyPageLayoutProps {
+  session: Session
   user: User
   meals: (Meal & { mealItems: MealItem[] })[]
-  imageUrls: Record<string, string>
 }
 
 export default function MyPageLayout({
+  session,
   user,
   meals,
-  imageUrls,
 }: MyPageLayoutProps) {
   return (
     <MainLayout>
@@ -27,7 +30,7 @@ export default function MyPageLayout({
         <div className="flex justify-between gap-8 pb-8">
           <div className="flex gap-12 items-center">
             <Image
-              src="https://picsum.photos/500/500"
+              src={session.user?.image ?? ''}
               alt="profile"
               width={160}
               height={160}
@@ -98,12 +101,44 @@ export default function MyPageLayout({
           </TabList>
           <TabPanels>
             <TabPanel>
-              <div className="">
+              <div className="flex flex-col gap-2">
                 {meals.map((meal) => {
+                  let typeStr = ''
+
+                  switch (meal.type) {
+                    case 'breakfast':
+                      typeStr = '아침'
+                      break
+                    case 'lunch':
+                      typeStr = '점심'
+                      break
+                    case 'dinner':
+                      typeStr = '저녁'
+                      break
+                    case 'snack':
+                      typeStr = '간식'
+                      break
+                    case 'etc':
+                      typeStr = '기타'
+                      break
+                  }
+
                   return (
-                    <div key={meal.mealId} className="flex gap-4 py-4">
-                      {meal.date.toLocaleDateString()}
-                    </div>
+                    <Link
+                      href={`/meal/${meal.mealId}`}
+                      key={meal.mealId}
+                      className="bg-gray-100 rounded-xl p-4 flex justify-between items-center gap-4 py-4"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="text-lg font-medium">
+                          {meal.date.toLocaleDateString()} {typeStr}
+                        </div>
+                        <div className="text-sm">
+                          {meal.mealItems.length}개 음식
+                        </div>
+                      </div>
+                      <IconChevronRight />
+                    </Link>
                   )
                 })}
               </div>
