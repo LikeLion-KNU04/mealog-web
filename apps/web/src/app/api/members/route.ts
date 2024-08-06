@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
       email: session.user.email!,
       name: data.name,
       birthDate: new Date(data.birthDate),
+      profile: session.user.image!,
       gender: data.gender,
       height: data.height,
       weight: data.weight,
