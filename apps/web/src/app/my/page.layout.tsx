@@ -47,26 +47,9 @@ export default function MyPageLayout({
             />
             <div>
               <div className="text-3xl font-semibold pb-4">{user.name}</div>
-              <div className="flex gap-4 pb-4">
-                <div className="grow text-lg font-light text-black/60">
-                  게시글 <span className="font-medium">100</span>
-                </div>
-                <div className="grow text-lg font-light text-black/60">
-                  팔로워 <span className="font-medium">200</span>
-                </div>
-                <div className="grow text-lg font-light text-black/60">
-                  팔로잉 <span className="font-medium">200</span>
-                </div>
-              </div>
-
-              <div className="text font-light pb-4">자기소개 문구입니다.</div>
             </div>
           </div>
-          <div className="">
-            <Button variant="outlined" className="w-32 h-12">
-              프로필 수정
-            </Button>
-          </div>
+          <div className=""></div>
         </div>
 
         <TabGroup>
@@ -83,7 +66,7 @@ export default function MyPageLayout({
                 </button>
               )}
             </Tab>
-            <Tab as={Fragment}>
+            {/* <Tab as={Fragment}>
               {({ selected }) => (
                 <button
                   className={clsx(
@@ -106,7 +89,7 @@ export default function MyPageLayout({
                   영양정보
                 </button>
               )}
-            </Tab>
+            </Tab> */}
           </TabList>
           <TabPanels>
             <TabPanel>
