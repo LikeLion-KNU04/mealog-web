@@ -34,7 +34,9 @@ export default function RegisterFormLayout() {
         toast.success('성공적으로 회원가입 처리되었습니다!', {
           duration: 3000,
         })
-        router.push('/')
+        setTimeout(() => {
+          window.location.assign('/')
+        }, 1000)
       })
     }
   }

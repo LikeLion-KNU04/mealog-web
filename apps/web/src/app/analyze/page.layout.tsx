@@ -8,6 +8,11 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
+import dayjs from 'dayjs'
+import 'dayjs/locale/ko'
+
+dayjs.locale('ko')
+
 interface AnalyzePageLayoutProps {
   mealId: string
   meal: Meal
@@ -29,14 +34,18 @@ export default function AnalyzePageLayout({
       for (let mealItem of mealItems) {
         try {
           await axios.post(`/api/analyze?mealItemId=${mealItem.mealItemId}`)
-          setSuccessCount((count) => count + 1)
         } catch (error) {
           console.error(error)
+        } finally {
+          setSuccessCount((count) => count + 1)
         }
       }
 
       toast.success('분석이 완료되었습니다!')
-      setTimeout(() => router.push(`/meal/${mealId}`), 2000)
+      setTimeout(
+        () => router.push(`/meals/${dayjs(meal.date).format('YYYY-MM-DD')}`),
+        2000
+      )
     })()
   }, [mealItems])
 

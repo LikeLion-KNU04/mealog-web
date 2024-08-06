@@ -22,8 +22,9 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js'
-import { useSession } from 'next-auth/react'
-import { User } from '@prisma/client'
+import { User, Meal, MealItem, MealItemAnalysis } from '@repo/database'
+import { Session } from 'next-auth'
+import clsx from 'clsx'
 
 Chart.register(
   CategoryScale,
@@ -36,15 +37,51 @@ Chart.register(
 )
 
 interface DashboardPageProps {
+  session: Session
   user: User
+  meals: (Meal & {
+    mealItems: (MealItem & { mealItemAnalysis: MealItemAnalysis | null })[]
+  })[]
 }
 
-export default function DashboardPage({ user }: DashboardPageProps) {
-  const { data: session } = useSession() //세션 정보를 가져옴
+export default function DashboardPage({
+  session,
+  user,
+  meals,
+}: DashboardPageProps) {
+  const uploadedToday = meals.filter(
+    (meal) => meal.date.toDateString() === new Date().toDateString()
+  )
+
+  const mealsWeek = meals.filter(
+    (meal) =>
+      meal.date >= new Date(new Date().setDate(new Date().getDate() - 7))
+  )
+
+  let totalCarbohydrate = 0
+  let totalProtein = 0
+  let totalFat = 0
+  let totalSugar = 0
+
+  mealsWeek.forEach((meal) => {
+    meal.mealItems.forEach((mealItem) => {
+      if (mealItem.mealItemAnalysis) {
+        totalCarbohydrate += mealItem.mealItemAnalysis.carbohydrate
+        totalProtein += mealItem.mealItemAnalysis.protein
+        totalFat += mealItem.mealItemAnalysis.fat
+        totalSugar += mealItem.mealItemAnalysis.sugar
+      }
+    })
+  })
+
+  const weeklyAverageCarbohydrate = totalCarbohydrate / mealsWeek.length
+  const weeklyAverageProtein = totalProtein / mealsWeek.length
+  const weeklyAverageFat = totalFat / mealsWeek.length
+  const weeklyAverageSugar = totalSugar / mealsWeek.length
 
   return (
     <MainLayout>
-      <div className="relative h-80 w-full overflow-hidden">
+      <div className="relative h-72 w-full overflow-hidden">
         <Image
           className="object-cover brightness-50 blur-sm scale-105"
           src={bannerImg}
@@ -78,11 +115,11 @@ export default function DashboardPage({ user }: DashboardPageProps) {
           <div className="text-2xl font-bold py-6">{user.name}</div>
           <div className="flex flex-col gap-1">
             <div className="flex justify-between gap-4">
-              <div className="text-gray-600">분석한 개수</div>
-              <div className="font-medium">2개</div>
+              <div className="text-gray-600">분석한 식사 개수</div>
+              <div className="font-medium">{meals.length}개</div>
             </div>
             <div className="flex justify-between gap-4">
-              <div className="text-gray-600">내 영양점수</div>
+              <div className="text-gray-600">내 평균 영양점수</div>
               <div className="font-medium text-primary-600 flex items-center gap-2">
                 <IconPlant size={20} strokeWidth={1.25} />
                 <span>89.9</span>
@@ -91,10 +128,19 @@ export default function DashboardPage({ user }: DashboardPageProps) {
           </div>
         </div>
         <div className="grow">
-          <div className="bg-zinc-100 flex gap-4 justify-between items-center rounded-xl px-6 py-5 mb-8">
+          <div
+            className={clsx(
+              'flex gap-4 justify-between items-center rounded-xl px-6 py-5 mb-8',
+              uploadedToday.length
+                ? 'bg-primary-100 text-primary-700'
+                : 'bg-zinc-100'
+            )}
+          >
             <div>
               <div className="text-xl font-bold pb-2">
-                오늘 음식 사진을 올리지 않았어요
+                {uploadedToday.length
+                  ? '오늘 음식 사진을 올렸습니다!'
+                  : '오늘 음식 사진을 올리지 않았어요'}
               </div>
               <div className="text-sm text-zinc-500">
                 음식 사진을 올리고 영양 분석 및 식단 추천을 받아보세요!
@@ -120,10 +166,20 @@ export default function DashboardPage({ user }: DashboardPageProps) {
                 <span>탄수화물</span>
               </div>
               <div className="w-full bg-primary-200 my-1">
-                <div className="bg-primary-600 h-1 w-1/2"></div>
+                <div
+                  className="bg-primary-600 h-1"
+                  style={{
+                    width: `${mealsWeek.length ? Math.min((weeklyAverageCarbohydrate / 130) * 100, 100) : 0}%`,
+                  }}
+                />
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-primary-600">72g</span>
+                <span className="text-primary-600">
+                  {mealsWeek.length
+                    ? Math.round(weeklyAverageCarbohydrate * 10) / 10
+                    : '-'}{' '}
+                  g
+                </span>
                 <span className="text-gray-500">권장량 130g</span>
               </div>
             </div>
@@ -134,10 +190,20 @@ export default function DashboardPage({ user }: DashboardPageProps) {
                 <span>단백질</span>
               </div>
               <div className="w-full bg-primary-200 my-1">
-                <div className="bg-primary-600 h-1 w-1/2"></div>
+                <div
+                  className="bg-primary-600 h-1"
+                  style={{
+                    width: `${mealsWeek.length ? Math.min((weeklyAverageProtein / 130) * 100, 100) : 0}%`,
+                  }}
+                />
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-primary-600">72g</span>
+                <span className="text-primary-600">
+                  {mealsWeek.length
+                    ? Math.round(weeklyAverageProtein * 10) / 10
+                    : '-'}{' '}
+                  g
+                </span>
                 <span className="text-gray-500">권장량 130g</span>
               </div>
             </div>
@@ -148,10 +214,20 @@ export default function DashboardPage({ user }: DashboardPageProps) {
                 <span>당류</span>
               </div>
               <div className="w-full bg-primary-200 my-1">
-                <div className="bg-primary-600 h-1 w-1/2"></div>
+                <div
+                  className="bg-primary-600 h-1"
+                  style={{
+                    width: `${mealsWeek.length ? Math.min((weeklyAverageSugar / 130) * 100, 100) : 0}%`,
+                  }}
+                />
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-primary-600">72g</span>
+                <span className="text-primary-600">
+                  {mealsWeek.length
+                    ? Math.round(weeklyAverageSugar * 10) / 10
+                    : '-'}{' '}
+                  g
+                </span>
                 <span className="text-gray-500">권장량 130g</span>
               </div>
             </div>
@@ -162,10 +238,20 @@ export default function DashboardPage({ user }: DashboardPageProps) {
                 <span>지방</span>
               </div>
               <div className="w-full bg-primary-200 my-1">
-                <div className="bg-primary-600 h-1 w-1/2"></div>
+                <div
+                  className="bg-primary-600 h-1"
+                  style={{
+                    width: `${mealsWeek.length ? Math.min((weeklyAverageFat / 130) * 100, 100) : 0}%`,
+                  }}
+                />
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-primary-600">72g</span>
+                <span className="text-primary-600">
+                  {mealsWeek.length
+                    ? Math.round(weeklyAverageFat * 10) / 10
+                    : '-'}{' '}
+                  g
+                </span>
                 <span className="text-gray-500">권장량 130g</span>
               </div>
             </div>

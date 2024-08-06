@@ -2,7 +2,6 @@ import { IntroPage } from './intro.page'
 import DashboardPage from './dashboard.page'
 import { PrismaClient } from '@repo/database'
 import { getServerSession } from 'next-auth'
-import { redirect } from 'next/navigation'
 
 const prisma = new PrismaClient()
 
@@ -15,10 +14,21 @@ export default async function MainPage() {
       where: { email: session.user.email ?? undefined },
     })
 
-    if (!user) return redirect('/login')
+    if (!user) return <IntroPage />
 
-    return <DashboardPage user={user} />
-  } else {
-    return <IntroPage />
+    const meals = await prisma.meal.findMany({
+      where: { userId: user.userId },
+      include: {
+        mealItems: {
+          include: {
+            mealItemAnalysis: true,
+          },
+        },
+      },
+    })
+
+    return <DashboardPage session={session} user={user} meals={meals} />
   }
+
+  return <IntroPage />
 }

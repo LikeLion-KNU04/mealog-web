@@ -34,6 +34,7 @@ model Meal {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   mealItems MealItem[]
+  isPublic  Boolean    @default(false)
 
   @@index([userId])
 }
@@ -74,6 +75,32 @@ model MealItemAnalysis {
   zinc         Float
   cholesterol  Float
   transfat     Float
+
+  // totalScore  Float
+  // energyScore Float
+  // eer         Float
+
+  // totalRatioScore        Float
+  // ratioCarbohydrateScore Float
+  // ratioProteinScore      Float
+  // ratioFatScore          Float
+  // ratioTransfatScore     Float
+
+  // totalNutritionScore        Float
+  // nutritionCarbohydrateScore Float
+  // nutritionProteinScore      Float
+  // nutritionCalciumScore      Float
+  // nutritionPhosphorusScore   Float
+  // nutritionMagnesiumScore    Float
+  // nutritionIronScore         Float
+  // nutritionZincScore         Float
+
+  // totalPenalty       Float
+  // phosphorusPenalty  Float
+  // natriumPenalty     Float
+  // ironPenalty        Float
+  // zincPenalty        Float
+  // cholesterolPenalty Float
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -3350,6 +3350,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dayjs@npm:^1.11.12":
+  version: 1.11.12
+  resolution: "dayjs@npm:1.11.12"
+  checksum: 10c0/9673d37f3f9ad8a91caaeae9b3fea9a0010c81c7f58599fb9d860bc3359b86632fbff8eb7dddc86c2acaab01c5e6860bc672952f17b58c9286140c52b077c8e4
+  languageName: node
+  linkType: hard
+
 "debug@npm:4, debug@npm:^4.1.0, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.3.5":
   version: 4.3.6
   resolution: "debug@npm:4.3.6"
@@ -5748,6 +5755,7 @@ __metadata:
     "@prisma/client": "npm:^5.17.0"
     "@types/uuid": "npm:^10.0.0"
     axios: "npm:^1.7.3"
+    dayjs: "npm:^1.11.12"
     firebase: "npm:^10.12.5"
     prettier: "npm:^3.3.3"
     prisma: "npm:^5.17.0"

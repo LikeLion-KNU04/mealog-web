@@ -36,6 +36,7 @@ export default function UploadPage() {
     })
 
   const [dragOver, setDragOver] = useState<boolean>(false)
+  const [isUploading, setIsUploading] = useState<boolean>(false)
 
   const { images } = watch()
 
@@ -69,6 +70,8 @@ export default function UploadPage() {
     e.stopPropagation()
     setDragOver(false)
 
+    if (isUploading) return
+
     if (e.dataTransfer) {
       const file = e.dataTransfer.files[0]
 
@@ -99,6 +102,9 @@ export default function UploadPage() {
       formData.append('images', image)
     })
 
+    toast('사진을 업로드하고 있습니다...')
+    setIsUploading(true)
+
     axios
       .post('/api/upload', formData, {
         headers: {
@@ -114,6 +120,9 @@ export default function UploadPage() {
         } else {
           toast.error('사진 업로드에 실패했습니다.')
         }
+      })
+      .finally(() => {
+        setIsUploading(false)
       })
   }
 
@@ -199,7 +208,10 @@ export default function UploadPage() {
                 dragOver &&
                   'border border-primary-500 bg-primary-200 transition-colors duration-200'
               )}
-              onClick={() => inputRef.current?.click()}
+              onClick={() => {
+                if (isUploading) return
+                inputRef.current?.click()
+              }}
               onDragEnter={handleDragEnter}
               onDragLeave={handleDragLeave}
               onDragOver={handleDragOver}
@@ -229,6 +241,7 @@ export default function UploadPage() {
                   type="button"
                   className="absolute top-2 right-2"
                   onClick={() => {
+                    if (isUploading) return
                     setValue(
                       'images',
                       images.filter((_, i) => i !== index)
@@ -242,7 +255,11 @@ export default function UploadPage() {
           </div>
 
           <div className="flex justify-end py-6">
-            <Button type="submit" className="flex items-center gap-2 text-lg">
+            <Button
+              type="submit"
+              disabled={isUploading}
+              className="flex items-center gap-2 text-lg"
+            >
               <IconArrowRight />
               <span>분석하기</span>
             </Button>

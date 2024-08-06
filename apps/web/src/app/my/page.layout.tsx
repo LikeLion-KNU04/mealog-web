@@ -7,11 +7,16 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import { Fragment } from 'react'
 import { User, Meal, MealItem } from '@repo/database'
-import { getDownloadURL, ref } from 'firebase/storage'
-import { storage } from '@/lib/firebase/firebaseClient'
 import Link from 'next/link'
 import { Session } from 'next-auth'
 import { IconChevronRight } from '@tabler/icons-react'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+import 'dayjs/locale/ko'
+
+dayjs.locale('ko')
+dayjs.extend(relativeTime)
 
 interface MyPageLayoutProps {
   session: Session
@@ -24,6 +29,10 @@ export default function MyPageLayout({
   user,
   meals,
 }: MyPageLayoutProps) {
+  const mealDates = [
+    ...new Set(meals.map((meal) => dayjs(meal.date).format('YYYY-MM-DD'))),
+  ].sort()
+
   return (
     <MainLayout>
       <div className="container mx-auto px-36 py-12">
@@ -102,47 +111,20 @@ export default function MyPageLayout({
           <TabPanels>
             <TabPanel>
               <div className="flex flex-col gap-2">
-                {meals
-                  .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-                  .map((meal) => {
-                    let typeStr = ''
-
-                    switch (meal.type) {
-                      case 'breakfast':
-                        typeStr = '아침'
-                        break
-                      case 'lunch':
-                        typeStr = '점심'
-                        break
-                      case 'dinner':
-                        typeStr = '저녁'
-                        break
-                      case 'snack':
-                        typeStr = '간식'
-                        break
-                      case 'etc':
-                        typeStr = '기타'
-                        break
-                    }
-
-                    return (
-                      <Link
-                        href={`/meal/${meal.mealId}`}
-                        key={meal.mealId}
-                        className="bg-gray-100 rounded-xl p-4 flex justify-between items-center gap-4 py-4"
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className="text-lg font-medium">
-                            {meal.date.toLocaleDateString()} {typeStr}
-                          </div>
-                          <div className="text-sm">
-                            {meal.mealItems.length}개 음식
-                          </div>
-                        </div>
-                        <IconChevronRight />
-                      </Link>
-                    )
-                  })}
+                {mealDates.map((mealDate) => {
+                  return (
+                    <Link
+                      href={`/meals/${mealDate}`}
+                      key={mealDate}
+                      className="bg-gray-100 rounded-xl p-4 flex justify-between items-center gap-4 py-4"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="text-lg font-medium">{mealDate}</div>
+                      </div>
+                      <IconChevronRight />
+                    </Link>
+                  )
+                })}
               </div>
             </TabPanel>
             <TabPanel>Content 2</TabPanel>
