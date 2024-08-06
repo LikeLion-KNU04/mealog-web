@@ -1,110 +1,39 @@
-# Turborepo starter
+# ✨ 밀로그: Mealog  
+모두의 건강한 식사를 위한 **AI 기반 영양 분석 및 식단 추천 서비스** Mealog  
+## 🦁 Team 경대라이온즈
+|<img src="https://avatars.githubusercontent.com/u/54466872?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/98478441?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/56078563?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/71973291?v=4" width="150" height="150"/>|
+|:-:|:-:|:-:|:-:|
+|황부연<br/>[@ArpaAP](https://github.com/ArpaAP)|박규리<br/>[@parkgyul](https://github.com/parkgyul)|박재민<br/>[@jamie2779](https://github.com/jamie2779)|심준성<br/>[@MOJAN3543](https://github.com/MOJAN3543)|  
 
-This is an official starter turborepo.
+## 🥰 개발 동기
+> 2020년 보건복지부에서는 한국인의 대부분이 나트륨의 섭취가 과도하게 높고 칼슘, 비타민 A와 같은 주요 영양소 섭취가 부족하다고 밝혔습니다. 이러한 문제를 해결하고자 사진을 통해 간편하게 음식의 영양 정보를 추적하고, 기록하여 본인의 식습관을 뒤돌아 보고 좀 더 건강한 식사를 할 수 있도록 하는 서비스인 Mealog를 개발하게 되었습니다.
 
-## Using this example
+## 🔍 주요 기능
+* 사용자가 업로드한 사진을 AI 모델을 통해 식사에 포함된 영양소를 분석
+* 사용자가 하루에 섭취한 영양소를 기록하고 점수화
+* 음식 사진을 서비스에 공유 · 다른 사람들의 사진들을 탐색
+* 부족한 영양 섭취에 도움을 주는 식품 판매
 
-Run the following command:
+## 📚 기술 스택
+### Front-End
+* Next.js
+* TypeScript
+* TailWind CSS
+### Back-End
+* Next.js
+* TypeScript
+### AI API
+* YOLO v3
+* PyTorch
+* Flask
+### Other
+* Docker
+* Turborepo
+* Prisma
+* Github Action
 
-```sh
-npx create-turbo@latest -e with-prisma
-```
+## 🤔 유저 플로우
+![UserFlow_Diagram](https://github.com/user-attachments/assets/1396d6c3-84a5-4070-ad3e-23b11389e0d2)  
 
-## What's inside?
-
-This turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `web`: a [Next.js](https://nextjs.org/) app
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/database`: [Prisma](https://prisma.io/) ORM wrapper to manage & access your database
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-- [Prisma](https://prisma.io/) for database ORM
-- [Docker Compose](https://docs.docker.com/compose/) for local database
-
-### Database
-
-We use [Prisma](https://prisma.io/) to manage & access our database. As such you will need a database for this project, either locally or hosted in the cloud.
-
-To make this process easier, we offer a [`docker-compose.yml`](https://docs.docker.com/compose/) file to deploy a MySQL server locally with a new database named `turborepo` (To change this update the `MYSQL_DATABASE` environment variable in the `docker-compose.yml` file):
-
-```bash
-cd my-turborepo
-docker-compose up -d
-```
-
-Once deployed you will need to copy the `.env.example` file to `.env` in order for Prisma to have a `DATABASE_URL` environment variable to access.
-
-```bash
-cp .env.example .env
-```
-
-If you added a custom database name, or use a cloud based database, you will need to update the `DATABASE_URL` in your `.env` accordingly.
-
-Once deployed & up & running, you will need to create & deploy migrations to your database to add the necessary tables. This can be done using [Prisma Migrate](https://www.prisma.io/migrate):
-
-```bash
-npx prisma migrate dev
-```
-
-If you need to push any existing migrations to the database, you can use either the Prisma db push or the Prisma migrate deploy command(s):
-
-```bash
-yarn run db:push
-
-# OR
-
-yarn run db:migrate:deploy
-```
-
-There is slight difference between the two commands & [Prisma offers a breakdown on which command is best to use](https://www.prisma.io/docs/concepts/components/prisma-migrate/db-push#choosing-db-push-or-prisma-migrate).
-
-An optional additional step is to seed some initial or fake data to your database using [Prisma's seeding functionality](https://www.prisma.io/docs/guides/database/seed-database).
-
-To do this update check the seed script located in `packages/database/src/seed.ts` & add or update any users you wish to seed to the database.
-
-Once edited run the following command to run tell Prisma to run the seed script defined in the Prisma configuration:
-
-```bash
-yarn run db:seed
-```
-
-For further more information on migrations, seeding & more, we recommend reading through the [Prisma Documentation](https://www.prisma.io/docs/).
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```bash
-yarn run build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```bash
-yarn run dev
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+## 🤖 AI 레포지토리
+> [mealog-ai](https://github.com/LikeLion-KNU04/mealog-ai)
