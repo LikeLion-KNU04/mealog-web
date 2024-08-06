@@ -30,14 +30,7 @@ export default function MainNavbar() {
         </div>
 
         <div className="flex h-full items-center gap-5 px-2 text-sm">
-          <div className="flex gap-4 items-center text-black/75">
-            <Link href="/login">
-              <IconSearch size={20} />
-            </Link>
-            <Link href="/notifications">
-              <IconBell size={20} />
-            </Link>
-          </div>
+          <div className="flex gap-4 items-center text-black/75"></div>
           <div className="h-4 border-r border-black/20" />
           {session?.user ? (
             <Popover className="relative flex items-center">

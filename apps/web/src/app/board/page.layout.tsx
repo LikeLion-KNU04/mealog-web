@@ -14,6 +14,10 @@ export default function BoardPageLayout({
   return (
     <MainLayout>
       <div className="container mx-auto px-36 py-12">
+        <div className="text-primary-800 text-3xl font-semibold flex items-center gap-2 pb-4">
+          <span>게시판</span>
+        </div>
+
         <div className="grid grid-cols-4 gap-4">
           {meals.map((meal) => (
             <ArticleCard
@@ -22,7 +26,7 @@ export default function BoardPageLayout({
               user={meal.user}
               imageUrl={imageUrls[meal.mealId]}
             />
-          ))}
+          )) || <div className="">아직 쓴 글이 없습니다!</div>}
         </div>
       </div>
     </MainLayout>
