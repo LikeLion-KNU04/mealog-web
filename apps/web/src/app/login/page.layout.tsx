@@ -39,34 +39,6 @@ export default function LoginPageLayout() {
                   <Image src={googleLogo} alt="" width={24} height={24} />
                   <div className="text-center w-full">구글 계정으로 로그인</div>
                 </button>
-                <button
-                  type="button"
-                  className="px-6 py-3 bg-[#FEE500] rounded-xl flex items-center gap-4"
-                  onClick={() => signIn('kakao')}
-                >
-                  <Image src={kakaoLogo} alt="" width={24} height={24} />
-                  <div className="text-center w-full">
-                    카카오 계정으로 로그인
-                  </div>
-                </button>
-                <Link
-                  href="/register/form"
-                  className="px-6 py-3 bg-[#2DB400] rounded-xl flex items-center gap-4"
-                >
-                  <Image src={naverLogoWhite} alt="" width={24} height={24} />
-                  <div className="text-center w-full text-white">
-                    네이버 계정으로 로그인
-                  </div>
-                </Link>
-                <Link
-                  href="/register/form"
-                  className="px-6 py-3 bg-black rounded-xl flex items-center gap-4"
-                >
-                  <Image src={appleLogoWhite} alt="" width={24} height={24} />
-                  <div className="text-center w-full text-white">
-                    Apple로 로그인
-                  </div>
-                </Link>
               </div>
             </div>
           </div>
