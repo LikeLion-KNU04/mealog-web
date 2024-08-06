@@ -1,13 +1,17 @@
 import { getServerSession } from 'next-auth'
-import { redirect } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
+import BoardDetailPageLayout from './page.layout'
 import { PrismaClient } from '@repo/database'
-import BoardPageLayout from './page.layout'
 import { storage } from '@/lib/firebase/firebaseClient'
 import { getDownloadURL, ref } from 'firebase/storage'
 
 const prisma = new PrismaClient()
 
-export default async function BoardPage() {
+export default async function BoardDetailPage({
+  params,
+}: {
+  params: { boardId: string }
+}) {
   const session = await getServerSession()
 
   if (!session?.user) {
@@ -24,27 +28,27 @@ export default async function BoardPage() {
     return redirect('/login')
   }
 
-  const meals = await prisma.meal.findMany({
+  const meal = await prisma.meal.findUnique({
     where: {
-      userId: user.userId,
+      mealId: params.boardId,
       isPublic: true,
     },
     include: {
       mealItems: true,
       user: true,
     },
-    orderBy: {
-      date: 'desc',
-    },
   })
 
-  const imageUrls: Record<string, string> = {}
-
-  for (const meal of meals) {
-    const mealImageRef = ref(storage, `images/${meal.mealItems[0].imageName}`)
-    const mealImageUrl = await getDownloadURL(mealImageRef)
-    imageUrls[meal.mealId] = mealImageUrl
+  if (!meal) {
+    return notFound()
   }
 
-  return <BoardPageLayout meals={meals} imageUrls={imageUrls} />
+  const imageUrls = await Promise.all(
+    meal.mealItems.map((mealItem) => {
+      const mealImageRef = ref(storage, `images/${mealItem.imageName}`)
+      return getDownloadURL(mealImageRef)
+    })
+  )
+
+  return <BoardDetailPageLayout user={user} meal={meal} imageUrls={imageUrls} />
 }

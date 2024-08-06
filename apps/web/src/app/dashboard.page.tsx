@@ -79,6 +79,50 @@ export default function DashboardPage({
   const weeklyAverageFat = totalFat / mealsWeek.length
   const weeklyAverageSugar = totalSugar / mealsWeek.length
 
+  const mealDates = [...new Set(meals.map((meal) => meal.date.getTime()))]
+    .sort()
+    .map((date) => new Date(date).toLocaleDateString())
+
+  const carboHydrateByDates = meals.map((meal) => {
+    let total = 0
+    meal.mealItems.forEach((mealItem) => {
+      if (mealItem.mealItemAnalysis) {
+        total += mealItem.mealItemAnalysis.carbohydrate
+      }
+    })
+    return total
+  })
+
+  const proteinByDates = meals.map((meal) => {
+    let total = 0
+    meal.mealItems.forEach((mealItem) => {
+      if (mealItem.mealItemAnalysis) {
+        total += mealItem.mealItemAnalysis.protein
+      }
+    })
+    return total
+  })
+
+  const fatByDates = meals.map((meal) => {
+    let total = 0
+    meal.mealItems.forEach((mealItem) => {
+      if (mealItem.mealItemAnalysis) {
+        total += mealItem.mealItemAnalysis.fat
+      }
+    })
+    return total
+  })
+
+  const sugarByDates = meals.map((meal) => {
+    let total = 0
+    meal.mealItems.forEach((mealItem) => {
+      if (mealItem.mealItemAnalysis) {
+        total += mealItem.mealItemAnalysis.sugar
+      }
+    })
+    return total
+  })
+
   return (
     <MainLayout>
       <div className="relative h-72 w-full overflow-hidden">
@@ -122,7 +166,7 @@ export default function DashboardPage({
               <div className="text-gray-600">내 평균 영양점수</div>
               <div className="font-medium text-primary-600 flex items-center gap-2">
                 <IconPlant size={20} strokeWidth={1.25} />
-                <span>89.9</span>
+                <span>{uploadedToday ? 89.9 : '-'}</span>
               </div>
             </div>
           </div>
@@ -155,8 +199,11 @@ export default function DashboardPage({
             </Link>
           </div>
 
-          <div className="text-2xl font-bold py-3">
-            {user.name}님의 일평균 영양 현황
+          <div className="py-3 flex justify-between items-end">
+            <div className="text-2xl font-bold">
+              {user.name}님의 일평균 영양 현황
+            </div>
+            <div className="text-sm text-gray-600">최근 일주일 기준</div>
           </div>
 
           <div className="grid grid-cols-4 gap-4 py-3 mb-6">
@@ -264,33 +311,31 @@ export default function DashboardPage({
           <div className="pb-12">
             <Line
               data={{
-                labels: [
-                  '07/26',
-                  '07/27',
-                  '07/28',
-                  '07/29',
-                  '07/30',
-                  '07/31',
-                  '08/01',
-                ],
+                labels: mealDates,
                 datasets: [
                   {
                     label: '탄수화물',
-                    data: [122, 134, 147, 152, 169, 171, 184],
+                    data: carboHydrateByDates,
                     fill: false,
                     borderColor: 'rgb(54, 162, 235)',
                   },
                   {
                     label: '단백질',
-                    data: [56, 71, 65, 43, 55, 89, 74],
+                    data: proteinByDates,
                     fill: false,
                     borderColor: 'rgb(118, 192, 75)',
                   },
                   {
-                    label: '지방',
-                    data: [54, 75, 24, 65, 66, 85, 67],
+                    label: '당류',
+                    data: sugarByDates,
                     fill: false,
                     borderColor: 'rgb(255, 99, 132)',
+                  },
+                  {
+                    label: '지방',
+                    data: fatByDates,
+                    fill: false,
+                    borderColor: 'rgb(255, 211, 99)',
                   },
                 ],
               }}
