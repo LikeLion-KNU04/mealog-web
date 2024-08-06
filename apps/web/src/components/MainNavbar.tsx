@@ -67,6 +67,9 @@ export default function MainNavbar() {
                       redirect: false,
                     }).then(() => {
                       router.push('/')
+                      if (window.location.pathname === '/') {
+                        window.location.reload()
+                      }
                       toast.success('로그아웃 되었습니다.', {
                         duration: 3000,
                       })

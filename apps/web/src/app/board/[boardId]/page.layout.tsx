@@ -3,7 +3,7 @@
 import Comment from '@/components/Comment'
 import MainLayout from '@/components/MainLayout'
 import Nutrient from '@/components/Nutrient'
-import { Meal, User } from '@repo/database'
+import { Meal, MealItem, MealItemAnalysis, User } from '@repo/database'
 import {
   IconBookmark,
   IconChevronLeft,
@@ -23,7 +23,9 @@ dayjs.extend(relativeTime)
 
 interface BoardDetailPageProps {
   user: User
-  meal: Meal
+  meal: Meal & {
+    mealItems: (MealItem & { mealItemAnalysis: MealItemAnalysis | null })[]
+  }
   imageUrls: string[]
 }
 
@@ -40,6 +42,23 @@ export default function BoardDetailPageLayout({
     else if (0 > index + offset) setIndex(0)
     else setIndex(imageLength - 1)
   }
+
+  const totalCarboHydrates = meal.mealItems.reduce(
+    (acc, mealItem) => acc + (mealItem.mealItemAnalysis?.carbohydrate ?? 0),
+    0
+  )
+  const totalProtein = meal.mealItems.reduce(
+    (acc, mealItem) => acc + (mealItem.mealItemAnalysis?.protein ?? 0),
+    0
+  )
+  const totalFat = meal.mealItems.reduce(
+    (acc, mealItem) => acc + (mealItem.mealItemAnalysis?.fat ?? 0),
+    0
+  )
+  const totalSugar = meal.mealItems.reduce(
+    (acc, mealItem) => acc + (mealItem.mealItemAnalysis?.sugar ?? 0),
+    0
+  )
 
   return (
     <MainLayout>
@@ -68,7 +87,7 @@ export default function BoardDetailPageLayout({
                   alt=""
                   width={512}
                   height={512}
-                  className="w-[512px] h-[512px] aspect-square object-cover rounded-2xl"
+                  className="w-[512px] h-[512px] aspect-square object-cover rounded-2xl border"
                 />
               ))}
             </div>
@@ -82,12 +101,12 @@ export default function BoardDetailPageLayout({
             <IconChevronRight />
           </button>
         </div>
-        <div className="flex flex-col flex-grow gap-6 p-6 shadow-2xl shadow-black/10">
+        <div className="flex flex-col flex-grow gap-6 p-6 rounded-xl border shadow-black/10">
           <div className="flex items-center gap-3">
             <Image
               className="rounded-full"
               alt="profile Image"
-              src="https://picsum.photos/200/200"
+              src={user.profile ?? ''}
               width={32}
               height={32}
             />
@@ -98,7 +117,12 @@ export default function BoardDetailPageLayout({
           </div>
 
           <div>
-            <Nutrient carbs={100} protein={100} fat={100} />
+            <Nutrient
+              carbs={totalCarboHydrates}
+              protein={totalProtein}
+              fat={totalFat}
+              sugars={totalSugar}
+            />
           </div>
           <div className="flex flex-row py-5 border rounded-lg justify-evenly ">
             <button type="button">
@@ -111,23 +135,27 @@ export default function BoardDetailPageLayout({
               <IconShare />
             </button>
           </div>
-          <div className="text-xl">댓글 3개</div>
+          <div className="text-lg">댓글 1개</div>
           <div className="flex flex-col gap-5">
             <Comment
-              profileImage="https://picsum.photos/200/200"
-              username="username"
-              content="댓글입니다."
+              profileImage="https://picsum.photos/200/200?random=2"
+              username="황부연"
+              content="멋사 해커톤 화이팅!"
             />
-            <Comment
-              profileImage="https://picsum.photos/200/200"
-              username="username"
-              content="댓글입니다."
+          </div>
+
+          <div className="flex gap-2">
+            <input
+              type="text"
+              className="grow px-3 py-2 border rounded-xl bg-white"
+              placeholder="댓글 입력..."
             />
-            <Comment
-              profileImage="https://picsum.photos/200/200"
-              username="username"
-              content="댓글입니다."
-            />
+            <button
+              type="button"
+              className="bg-primary-600 text-sm text-white rounded-xl px-4 py-2"
+            >
+              등록
+            </button>
           </div>
         </div>
       </div>

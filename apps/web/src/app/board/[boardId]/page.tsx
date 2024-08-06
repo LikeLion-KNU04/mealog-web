@@ -34,8 +34,11 @@ export default async function BoardDetailPage({
       isPublic: true,
     },
     include: {
-      mealItems: true,
-      user: true,
+      mealItems: {
+        include: {
+          mealItemAnalysis: true,
+        },
+      },
     },
   })
 

@@ -138,9 +138,7 @@ export default function DashboardPage({
               모두의 건강한 식사를 위한
             </div>
             <div className="flex items-center gap-4">
-              <div className="font-bold text-4xl">
-                AI 기반 영양 분석 및 식단 추천 서비스
-              </div>
+              <div className="font-bold text-4xl">AI 기반 영양 분석 서비스</div>
               <Image src={logoWhite} alt="logo" width={120} />
             </div>
           </div>
