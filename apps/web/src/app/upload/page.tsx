@@ -113,7 +113,7 @@ export default function UploadPage() {
       })
       .then((res) => {
         if (res.status === 200) {
-          toast.success('사진 업르드를 완료했습니다. 분석을 시작합니다.')
+          toast.success('사진 업로드를 완료했습니다. 분석을 시작합니다.')
 
           let meal = res.data.data as Meal
           router.push(`/analyze?mealId=${meal.mealId}`)
